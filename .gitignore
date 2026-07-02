@@ -1,0 +1,11 @@
+# Raw candidate data is large (~50MB gz / ~465MB uncompressed) and is
+# distributed separately by the organizers -- don't commit it.
+candidates.jsonl
+candidates.jsonl.gz
+sample_candidates.json
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store

@@ -1,0 +1,107 @@
+# Redrob Hackathon — Submission Metadata Template
+#
+# Copy this file to your repo root as `submission_metadata.yaml` and fill it in.
+# The fields here should match what you submit via the portal at upload time.
+# Stage 3 review uses this file to verify your portal metadata.
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "your-team-name-here"  # Used in leaderboard and announcements
+
+primary_contact:
+  name: "Full Name"
+  email: "primary@example.com"   # Used for all organizer communication
+  phone: "+91-XXXXXXXXXX"        # Used for top-50 / top-10 outreach
+
+team_members:
+  - name: "Member 1 Full Name"
+    email: "member1@example.com"
+    role: "ML Engineer"          # Optional, e.g. "Team Lead", "Backend", "Data"
+  - name: "Member 2 Full Name"
+    email: "member2@example.com"
+    role: "Data Engineer"
+  # Add more members as needed; solo participants list just one member
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/YOUR_USERNAME/YOUR_REPO"
+# Required. Must be reachable. Private repos OK if you can grant organizer
+# access at Stage 3 (the email to add will be communicated then).
+
+sandbox_link: "https://huggingface.co/spaces/YOUR_USERNAME/redrob-ranker"
+# Required. A working hosted environment where the ranker can be run on a small
+# candidate sample. See Section 10.5 of submission_spec.md for acceptable
+# platforms (HuggingFace Spaces, Streamlit Cloud, Replit, Colab, Docker, Binder).
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+# The single command that produces submission.csv from candidates.jsonl.
+# Verified: full 100,000-candidate pool ranked in ~15 seconds on a single
+# CPU core with ~4GB RAM available, well inside the 5-minute / 16GB limit.
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "REPLACE ME — e.g. MacBook Pro M2 / AWS EC2 c5.4xlarge"
+  cpu_cores: 1                                  # ranker is single-threaded; update if you parallelize
+  ram_gb: 16                                    # update to your machine's actual figure
+  python_version: "3.x"                          # run `python --version` and fill in
+  os: "REPLACE ME"                               # e.g. "Ubuntu 22.04 LTS"
+  uses_gpu_for_inference: false                 # ranker never touches a GPU
+  has_network_during_ranking: false             # ranker makes zero network calls (stdlib only)
+  pre_computation_required: false               # no precomputed embeddings/indexes needed
+  pre_computation_time_minutes: 0
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+# Transparency only — declared use is NOT penalized. Be honest. Stage 5 interview
+# may verify these declarations against your code; declarations that contradict
+# your code or your interview are flagged.
+ai_tools_used:
+  - "Claude"
+  # REPLACE with your team's actual tool usage: "ChatGPT", "Cursor", "Copilot",
+  # "Gemini", "Codeium", "Other", "None"
+
+ai_usage_summary: |
+  REPLACE with an honest description of your own team's AI tool usage.
+  (Placeholder, reflecting how this starter repo was produced: "Used Claude
+  to design and implement the feature-scoring ranker, honeypot detector, and
+  reasoning generator based on a reading of the JD/spec/signals docs and a
+  profiling pass over candidates.jsonl's actual title/company/skill
+  vocabulary. No candidate data was sent to any external API during the
+  ranking step -- rank.py runs fully offline on the standard library.")
+
+# ============================================================================
+# Approach summary (optional but recommended)
+# ============================================================================
+methodology_summary: |
+  Rule-based, fully transparent ranker (no embeddings/LLM calls -- see
+  README for why). Six weighted 0-1 components per candidate: skill_fit
+  (0.35, trust-weighted against JD must-have skills so a 0-duration/
+  0-endorsement claimed skill only counts at 40% strength), title_role_fit
+  (0.20, current+historical titles bucketed core/adjacent/CV-only/
+  irrelevant -- the main defense against keyword-stuffed non-technical
+  titles), production_evidence (0.15, free-text production-deployment
+  language + employer tier), experience_fit (0.10, triangular peak at
+  5-9y), location_fit (0.10, Pune/Noida > Tier-1 India > elsewhere), and
+  behavioral (0.10, Redrob signals). A 0.5-1.0x availability multiplier
+  down-weights inactive/unresponsive candidates per the JD's explicit
+  instruction. Multiplicative gates penalize consulting-only careers,
+  pure-research-only profiles, CV/speech-only expertise, and job-hopping.
+  Honeypots are excluded via two internally-checkable consistency
+  checks (experience-vs-career-history mismatch; expert-proficiency
+  skills claimed with 0 months used), which flagged 69 of 100,000
+  candidates. Full 100K pool ranks in ~15 seconds, single CPU core.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true        # I have read submission_spec.md in full
+  code_is_original_work: true       # My code is my team's original work (using AI as a tool is fine)
+  no_collusion: true                # I have not coordinated my submission with other teams
+  honeypot_check_done: false        # OPTIONAL — set true if you explicitly checked for honeypots in your ranking
+  reproduction_tested: true         # I have tested that my reproduce_command runs end-to-end

@@ -1,0 +1,11 @@
+# The ranking pipeline (rank.py + src/) uses only the Python standard
+# library (json, csv, gzip, heapq, hashlib, datetime, argparse) -- no
+# third-party packages, no network access, no GPU. This is intentional:
+# it trivially satisfies the challenge's 5-minute / 16GB / CPU-only /
+# no-network compute constraints and removes any install-time risk in
+# the Stage 3 reproduction sandbox.
+#
+# The optional shortlist export script (scripts/export_xlsx.py) needs
+# openpyxl to produce a human-readable .xlsx workbook alongside the
+# required CSV -- it is NOT used to produce submission.csv itself.
+openpyxl>=3.1
